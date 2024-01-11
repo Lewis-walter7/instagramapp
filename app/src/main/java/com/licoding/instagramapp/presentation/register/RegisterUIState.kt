@@ -1,6 +1,8 @@
 package com.licoding.instagramapp.presentation.register
 
+
 data class RegisterUIState(
     val userNameError: String? = null,
-    val passwordError: String? = null
+    val passwordError: String? = null,
+    val registerUsername: String? = null
 )

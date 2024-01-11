@@ -1,9 +1,9 @@
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("com.google.devtools.ksp")
-
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -40,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -49,6 +49,7 @@ android {
     }
 }
 val ktor_version: String by project
+val kotlinx_serialization_version: String by project
 
 dependencies {
 
@@ -74,17 +75,19 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-android:$ktor_version")
+    implementation("io.ktor:ktor-client-json:$ktor_version")
     implementation("io.ktor:ktor-client-serialization:$ktor_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
-
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-serialization:$ktor_version")
+    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version")
 
     //room
     val room_version = "2.6.1"
-
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
-
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
 }
-

@@ -1,18 +1,19 @@
 package com.licoding.instagramapp.data.models
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Serializable
+@Entity
 data class User(
-    val id: String? = "",
+    @PrimaryKey
+    val id: String,
     val username: String,
     val password: String,
     val email: String? = null,
-    @SerialName("phone_number")val phoneNumber: String? = null,
+    val phoneNumber: String? = null,
     val bio: String? = null,
-    val followers: List<String>,
-    @SerialName("profile_image")val profileImage: String?,
-    @SerialName("account_type")val accountType: AccountType,
-    @SerialName("created_at")val createdAt: Long
+    val profileImage: String?,
+    val accountType: String,
+    val createdAt: Long?,
+    val token: String
 )
