@@ -209,7 +209,7 @@ fun PasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp),
-            enabled = password.isNotEmpty(),
+            enabled = password.length > 6,
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (password.isNotEmpty()) MaterialTheme.colorScheme.onTertiary else Color.Gray
             ),

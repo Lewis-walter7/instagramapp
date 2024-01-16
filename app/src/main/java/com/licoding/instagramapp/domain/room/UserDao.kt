@@ -9,9 +9,12 @@ import com.licoding.instagramapp.data.models.User
 interface UserDao {
     @Upsert
     suspend fun saveUser(user: User)
-    @Query("SELECT * FROM user")
-    suspend fun getUser(): User
+    @Query("SELECT * FROM user WHERE username = :username")
+    suspend fun getUser(username: String): User?
     @Query("DELETE from user WHERE user.id = :userId")
     suspend fun deleteUserByUserId(userId: String)
+
+    @Query("SELECT * FROM user")
+    suspend fun getCurrentUser(): User?
 }
 

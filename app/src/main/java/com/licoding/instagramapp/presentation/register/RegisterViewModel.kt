@@ -1,42 +1,55 @@
 package com.licoding.instagramapp.presentation.register
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.licoding.instagramapp.data.models.User
+import com.licoding.instagramapp.data.remote.NetworkObserver
+import com.licoding.instagramapp.data.remote.dto.AuthResponse
+import com.licoding.instagramapp.data.remote.dto.UserResponse
 import com.licoding.instagramapp.data.repository.UserRepository
 import com.licoding.instagramapp.domain.requests.UserRequest
+import com.licoding.instagramapp.domain.room.UserDao
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val userRepository: UserRepository,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val userDao: UserDao,
+    connectivityManager: NetworkObserver
 ): ViewModel() {
-
-    //handle splash screen show up
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading = _isLoading.asStateFlow()
-
-
     init {
         viewModelScope.launch {
-            delay(3000)
+            Authenticate()
+            delay(5000)
             _isLoading.value = false
+            //GetUserInfo()
         }
     }
+
+   private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
 
     private val _state = MutableStateFlow(RegisterUIState())
     val state = _state.asStateFlow()
     var password =""
     var username = ""
 
+    private val responses = Channel<Boolean>()
+    val responseChannel = responses.receiveAsFlow()
+
     val newUser = UserRequest(
         username = username,
         password = password
+    )
+    val networkStatus = connectivityManager.observerNetworkStatus().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(3000), NetworkObserver.NetworkStatus.UnAvailable
     )
     @SuppressLint("CommitPrefEdits")
     fun onEvent(event: RegisterUIEvent) {
@@ -45,7 +58,10 @@ class RegisterViewModel(
                 val userRequest = event.userRequest
                 viewModelScope.launch {
                     val response = userRepository.loginUser(userRequest)
-                    delay(500)
+                    sharedPreferences.edit()
+                        .putString("jwt-token", response.token)
+                        .apply()
+                    Authenticate()
                     println(response)
                 }
             }
@@ -55,12 +71,11 @@ class RegisterViewModel(
                     username = username1!!,
                     password = password
                 )
-//                viewModelScope.launch {
-//                    userRequest.let {
-//                        userRepository.createUser(it)
-//                    }
-//                }
-                println(newUserRequest)
+                viewModelScope.launch {
+                    newUserRequest.let {
+                        userRepository.createUser(it)
+                    }
+                }
             }
             is RegisterUIEvent.OnLoginPasswordChange -> {
                 password = event.password
@@ -96,5 +111,33 @@ class RegisterViewModel(
     override fun onCleared() {
         super.onCleared()
         sharedPreferences.edit().remove("username").apply()
+    }
+
+    private suspend fun Authenticate() {
+        viewModelScope.launch {
+            val response = userRepository.authenticate()
+            responses.send(response.isAuthenticated)
+        }
+    }
+    private suspend fun GetUserInfo() {
+        val response = userRepository.getUserInfo()
+        val user = userDao.getUser(response.username)
+        if (user == null) {
+            userDao.saveUser(response.toUser())
+        } else return
+    }
+
+    private fun UserResponse.toUser(): User {
+        return User(
+            id = id,
+            username = username,
+            password = password,
+            createdAt = createdAt,
+            profileImage = profileImage,
+            bio = bio,
+            phoneNumber = phoneNumber,
+            email = email,
+            accountType = accountType
+        )
     }
 }

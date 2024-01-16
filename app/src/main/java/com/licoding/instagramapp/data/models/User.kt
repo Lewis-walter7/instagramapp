@@ -15,5 +15,4 @@ data class User(
     val profileImage: String?,
     val accountType: String,
     val createdAt: Long?,
-    val token: String
 )
