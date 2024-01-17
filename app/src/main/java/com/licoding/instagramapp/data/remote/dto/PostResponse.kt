@@ -1,15 +1,14 @@
 package com.licoding.instagramapp.data.remote.dto
 
-import com.licoding.instagramapp.data.models.Media
-import com.licoding.instagramapp.domain.services.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
 
+@Serializable
 data class PostResponse(
-    val caption: String? = "",
-    val media: Media,
-    val likes: List<String>?,
-    val comments: List<String>?,
-    @Serializable(with = LocalDateTimeSerializer::class)
-    val createdAt: LocalDateTime
+    val postUrl: String,
+    val userId: String,
+    val showComments: Boolean? = null,
+    val hideLikes: Boolean? = null,
+    val createdAt: Long,
+    val likes: Long,
+    val id: String
 )

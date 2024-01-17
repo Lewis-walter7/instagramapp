@@ -1,6 +1,5 @@
 package com.licoding.instagramapp.presentation.upload.components
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,9 +8,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,22 +22,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.licoding.instagramapp.data.models.Image
 import com.licoding.instagramapp.presentation.upload.UploadUIEvent
 import com.licoding.instagramapp.presentation.upload.UploadUIState
 
 @Composable
 fun UploadHome(
-    images: List<Image>,
     state: UploadUIState,
     onEvent: (UploadUIEvent) -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
     val state1 = rememberLazyListState()
 
     val singlePhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {uri -> onEvent(UploadUIEvent.onSelectedUriChange(uri!!))}
+        onResult = {uri -> onEvent(UploadUIEvent.OnSelectedUriChange(uri!!))}
     )
     Surface {
         LazyColumn(
@@ -69,7 +63,9 @@ fun UploadHome(
                                 )
                             }
                     ) {
-                       Column {
+                       Column(
+                           horizontalAlignment = Alignment.CenterHorizontally
+                       ) {
                            Icon(
                                imageVector = Icons.Default.PhotoLibrary,
                                contentDescription = null,
@@ -126,6 +122,7 @@ fun UploadHome(
                             TextButton(
                                 onClick = {
                                     navController.navigate("upload")
+                                    onEvent(UploadUIEvent.ShowAppBar(false))
                                 },
                                 content = {
                                     Text(
@@ -141,15 +138,5 @@ fun UploadHome(
                 }
             }
         }
-//        LazyVerticalGrid(
-//            columns = GridCells.Adaptive(minSize = 128.dp)
-//        ) {
-//            items(images){ photo ->
-//                AsyncImage(
-//                    model = photo,
-//                    contentDescription = null
-//                )
-//            }
-//        }
     }
 }

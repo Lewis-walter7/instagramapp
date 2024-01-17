@@ -1,4 +1,4 @@
-package com.licoding.instagramapp.data.repository
+package com.licoding.instagramapp.data.repository.user
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
@@ -103,5 +103,10 @@ class UserRepositoryImpl(
             }
             response.body<UserResponse>()
         }
+    }
+
+    override suspend fun logoutUser() {
+        sharedPreferences.edit().remove("jwt-token").apply()
+        authenticate()
     }
 }

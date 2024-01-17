@@ -22,8 +22,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.compose.InstagramappTheme
-import com.licoding.instagramapp.data.remote.NetworkObserver
-import com.licoding.instagramapp.data.repository.UserRepositoryImpl
+import com.licoding.instagramapp.data.repository.user.UserRepositoryImpl
 import com.licoding.instagramapp.domain.room.InstagramDatabase
 import com.licoding.instagramapp.domain.services.NetworkObserverImpl
 import com.licoding.instagramapp.presentation.register.components.ForgotDetails

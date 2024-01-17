@@ -1,16 +1,13 @@
 package com.licoding.instagramapp.presentation.register
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.SharedPreferences
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licoding.instagramapp.data.models.User
 import com.licoding.instagramapp.data.remote.NetworkObserver
-import com.licoding.instagramapp.data.remote.dto.AuthResponse
 import com.licoding.instagramapp.data.remote.dto.UserResponse
-import com.licoding.instagramapp.data.repository.UserRepository
+import com.licoding.instagramapp.data.repository.user.UserRepository
 import com.licoding.instagramapp.domain.requests.UserRequest
 import com.licoding.instagramapp.domain.room.UserDao
 import kotlinx.coroutines.channels.Channel
@@ -62,8 +59,10 @@ class RegisterViewModel(
                         .putString("jwt-token", response.token)
                         .apply()
                     Authenticate()
-                    println(response)
+                    GetUserInfo()
                 }
+                password = ""
+                username = ""
             }
             is RegisterUIEvent.OnRegisterButtonClicked -> {
                 val username1 = sharedPreferences.getString("username", null)
@@ -117,6 +116,9 @@ class RegisterViewModel(
         viewModelScope.launch {
             val response = userRepository.authenticate()
             responses.send(response.isAuthenticated)
+            if (!response.isAuthenticated) {
+                userDao.deleteUserByUserId()
+            }
         }
     }
     private suspend fun GetUserInfo() {
