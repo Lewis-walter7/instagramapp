@@ -3,7 +3,6 @@ package com.licoding.instagramapp
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,37 +24,37 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.InstagramappTheme
 import com.licoding.instagramapp.data.models.BottomNavigatioItem
 import com.licoding.instagramapp.data.repository.user.UserRepositoryImpl
 import com.licoding.instagramapp.presentation.main.*
+import com.licoding.instagramapp.presentation.main.components.EditProfile
+import com.licoding.instagramapp.presentation.main.search.Search
+import com.licoding.instagramapp.presentation.main.search.SearchResult
+
 
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         val sharedPreferences = getSharedPreferences("instagramPref", Context.MODE_PRIVATE)
         val userRepository = UserRepositoryImpl(sharedPreferences)
 
         val token = sharedPreferences.getString("jwt-token", null)
-
-        val viewModel by viewModels<MainViewModel>(
-            factoryProducer = {
-                object : ViewModelProvider.Factory {
-                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        return MainViewModel(application) as T
-                    }
-                }
-            }
-        )
-
-        val currentUser = viewModel.user
         super.onCreate(savedInstanceState)
         val intent = Intent(this@MainActivity, UploadActivity::class.java)
         setContent {
-
+            val viewModel by viewModels<MainViewModel>(
+                factoryProducer = {
+                    object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return MainViewModel(application, userRepository, sharedPreferences) as T
+                        }
+                    }
+                }
+            )
             LaunchedEffect(token) {
                 if (token == null) {
                     startActivity(Intent(this@MainActivity, RegisterActivity::class.java))
@@ -69,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 ),
                 BottomNavigatioItem(
                     icon = Icons.Default.Search,
-                    route = "search",
+                    route = "explore",
                 ),
                 BottomNavigatioItem(
                     icon = Icons.Default.AddBox,
@@ -86,6 +85,7 @@ class MainActivity : ComponentActivity() {
             var selectedIndex by remember {
                 mutableIntStateOf(0)
             }
+            val state by viewModel.state.collectAsState()
             InstagramappTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -94,30 +94,32 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     Scaffold(
                         bottomBar = {
-                            BottomAppBar(
-                                modifier = Modifier
-                                    .height(60.dp)
-                            ) {
-                                items.forEachIndexed { index, item ->
-                                    NavigationBarItem(
-                                        icon = {
-                                            Icon(
-                                                imageVector = item.icon,
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .size(30.dp)
-                                            )
-                                        },
-                                        onClick = {
-                                            selectedIndex = index
-                                            if (item.route != null) {
-                                                navController.navigate(item.route)
-                                            } else {
-                                                startActivity(intent)
-                                            }
-                                        },
-                                        selected = index == selectedIndex
-                                    )
+                            if (state.showBottomBar) {
+                                BottomAppBar(
+                                    modifier = Modifier
+                                        .height(60.dp)
+                                ) {
+                                    items.forEachIndexed { index, item ->
+                                        NavigationBarItem(
+                                            icon = {
+                                                Icon(
+                                                    imageVector = item.icon,
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .size(30.dp)
+                                                )
+                                            },
+                                            onClick = {
+                                                selectedIndex = index
+                                                if (item.route != null) {
+                                                    navController.navigate(item.route)
+                                                } else {
+                                                    startActivity(intent)
+                                                }
+                                            },
+                                            selected = index == selectedIndex
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -129,17 +131,39 @@ class MainActivity : ComponentActivity() {
                             composable("home") {
                                 Home()
                             }
-                            composable("search") {
-                                Search()
+                            navigation(startDestination = "search", route = "explore") {
+                                composable("search") {
+                                    Search(
+                                        posts = viewModel.searchPosts,
+                                        navController = navController
+                                    )
+                                }
+                                composable("searchResult") {
+                                    SearchResult(
+                                        navController = navController
+                                    )
+                                }
                             }
                             composable("reels") {
                                 Reels()
                             }
                             composable("profile") {
-                                if (currentUser != null) {
+                                state.currentUser?.let { it1 ->
                                     Profile(
                                         userRepository = userRepository,
-                                        user = currentUser
+                                        user = it1,
+                                        navController = navController,
+                                        posts = viewModel.posts
+                                    )
+                                }
+                            }
+                            composable("editprofile") {
+                                state.currentUser?.let { it1 ->
+                                    EditProfile(
+                                        navController = navController,
+                                        user = it1,
+                                        state = state,
+                                        onEvent = viewModel::onEvent
                                     )
                                 }
                             }
@@ -150,4 +174,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 

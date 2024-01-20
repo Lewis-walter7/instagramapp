@@ -8,11 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licoding.instagramapp.data.models.Image
 import com.licoding.instagramapp.data.models.User
-import com.licoding.instagramapp.data.remote.UploadFile
+import com.licoding.instagramapp.data.remote.post.UploadFile
 import com.licoding.instagramapp.data.repository.post.PostRepository
 import com.licoding.instagramapp.domain.requests.PostRequest
 import com.licoding.instagramapp.domain.room.AppDatabaseSingleton
-import com.licoding.instagramapp.domain.services.UriUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -30,7 +29,7 @@ class UploadViewModel(
 
     init {
         viewModelScope.launch {
-            user = appDatabase.userDao.getCurrentUser()!!
+            user = appDatabase.userDao.getCurrentUser()
         }
     }
     var images by mutableStateOf(emptyList<Image>())

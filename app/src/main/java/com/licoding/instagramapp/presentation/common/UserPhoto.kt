@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
 import com.licoding.instagramapp.R
@@ -16,10 +17,11 @@ fun UserPhoto(
     user: User
 ){
     AsyncImage(
-        model = user.profileImage ?: R.drawable.placholderavatar,
+        model = user.profileImage ?: R.drawable.placeholderavatar,
         contentDescription = null,
         modifier = Modifier
             .size(size)
-            .clip(RoundedCornerShape(50))
+            .clip(RoundedCornerShape(50)),
+        contentScale = ContentScale.Crop
     )
 }

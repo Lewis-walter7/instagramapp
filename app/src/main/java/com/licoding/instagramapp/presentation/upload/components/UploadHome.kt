@@ -59,7 +59,7 @@ fun UploadHome(
                             .border(width = 1.dp, MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(5.dp))
                             .clickable {
                                 singlePhotoPicker.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
                                 )
                             }
                     ) {

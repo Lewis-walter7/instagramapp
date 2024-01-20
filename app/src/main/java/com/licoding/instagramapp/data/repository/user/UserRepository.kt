@@ -4,6 +4,7 @@ import com.licoding.instagramapp.data.remote.dto.AuthResponse
 import com.licoding.instagramapp.data.remote.dto.AuthenticationResponse
 import com.licoding.instagramapp.data.remote.dto.PostResponse
 import com.licoding.instagramapp.data.remote.dto.UserResponse
+import com.licoding.instagramapp.domain.requests.EditedUserRequest
 import com.licoding.instagramapp.domain.requests.UserRequest
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,8 @@ interface UserRepository {
     fun getUsers(): Flow<List<UserResponse>>
     fun getUserPosts(): Flow<List<PostResponse>>
 
-    suspend fun getUserInfo(): UserResponse
+    suspend fun getUserInfo(): UserResponse?
     suspend fun logoutUser()
+    suspend fun updateUser(user: EditedUserRequest)
+    suspend fun updateUserWithUsername(user: EditedUserRequest): AuthResponse
 }

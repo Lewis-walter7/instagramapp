@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun UploadScreen(
     state: UploadUIState,
-    user: User,
+    user: User?,
     onEvent: (UploadUIEvent) -> Unit,
     navController: NavController,
     closeIntent: () -> Unit
@@ -68,7 +68,7 @@ fun UploadScreen(
                             .clickable {
                                 scope.launch {
                                     onEvent(UploadUIEvent.OnUploadButtonClicked)
-                                    delay(3000)
+                                    delay(4000)
                                     closeIntent()
                                 }
                             }
@@ -95,7 +95,7 @@ fun UploadScreen(
                     modifier = Modifier
                         .padding(end = 7.dp),
                 ) {
-                    UserPhoto(45.dp, user)
+                    UserPhoto(45.dp, user!!)
                     Text(
                         text = user.username,
                         fontSize = 10.sp

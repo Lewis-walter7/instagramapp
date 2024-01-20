@@ -1,18 +1,13 @@
-package com.licoding.instagramapp.data.remote
+package com.licoding.instagramapp.data.remote.post
 
 import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import com.google.firebase.Firebase
-import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
-
-interface UploadApiService {
-    suspend fun uploadPost()
-}
 
 private val firebaseRef = Firebase.storage.reference
 

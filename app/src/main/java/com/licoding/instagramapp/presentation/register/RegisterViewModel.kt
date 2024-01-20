@@ -21,12 +21,16 @@ class RegisterViewModel(
     private val userDao: UserDao,
     connectivityManager: NetworkObserver
 ): ViewModel() {
+     var user: User? = null
+
     init {
         viewModelScope.launch {
             Authenticate()
             delay(5000)
             _isLoading.value = false
-            //GetUserInfo()
+
+            user = userDao.getCurrentUser()
+            GetUserInfo()
         }
     }
 
@@ -123,9 +127,8 @@ class RegisterViewModel(
     }
     private suspend fun GetUserInfo() {
         val response = userRepository.getUserInfo()
-        val user = userDao.getUser(response.username)
-        if (user == null) {
-            userDao.saveUser(response.toUser())
+        if (response != null) {
+            userDao.upsertUser(response.toUser())
         } else return
     }
 
@@ -139,7 +142,8 @@ class RegisterViewModel(
             bio = bio,
             phoneNumber = phoneNumber,
             email = email,
-            accountType = accountType
+            accountType = accountType,
+            name = name
         )
     }
 }

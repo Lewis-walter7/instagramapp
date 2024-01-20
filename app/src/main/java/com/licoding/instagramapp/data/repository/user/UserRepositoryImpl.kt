@@ -10,6 +10,7 @@ import com.licoding.instagramapp.data.remote.dto.AuthResponse
 import com.licoding.instagramapp.data.remote.dto.AuthenticationResponse
 import com.licoding.instagramapp.data.remote.dto.PostResponse
 import com.licoding.instagramapp.data.remote.dto.UserResponse
+import com.licoding.instagramapp.domain.requests.EditedUserRequest
 import com.licoding.instagramapp.domain.requests.UserRequest
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -92,16 +93,20 @@ class UserRepositoryImpl(
             AuthenticationResponse(isAuthenticated = false)
         }
     }
-    override suspend fun getUserInfo(): UserResponse {
+    override suspend fun getUserInfo(): UserResponse? {
         return withContext(Dispatchers.IO) {
             val token = sharedPreferences.getString("jwt-token", null)
-            val response = client.get {
-                url(HttpRoutes.USERINFOROUTE)
-                headers{
-                    append("Authorization", "Bearer $token")
+
+            token?.let {
+               val response = client.get {
+                    url(HttpRoutes.USERINFOROUTE)
+                    headers{
+                        append("Authorization", "Bearer $token")
+                    }
                 }
+
+                response.body<UserResponse>()
             }
-            response.body<UserResponse>()
         }
     }
 
@@ -109,4 +114,23 @@ class UserRepositoryImpl(
         sharedPreferences.edit().remove("jwt-token").apply()
         authenticate()
     }
+
+    override suspend fun updateUser(user: EditedUserRequest) {
+        client.patch {
+            url(HttpRoutes.UPDATEUSER)
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }
+    }
+
+    override suspend fun updateUserWithUsername(user: EditedUserRequest): AuthResponse {
+        val response = client.patch {
+            url(HttpRoutes.UPDATEUSER)
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }
+        return response.body<AuthResponse>()
+    }
+
+
 }

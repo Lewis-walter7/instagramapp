@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 
 suspend fun GetCurrentUser(
     userDao: UserDao
-) : User? {
+) : User {
     return withContext(Dispatchers.IO) {
         userDao.getCurrentUser()
     }
