@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.licoding.instagramapp.data.models.User
 import com.licoding.instagramapp.data.remote.NetworkObserver
 import com.licoding.instagramapp.data.remote.dto.UserResponse
-import com.licoding.instagramapp.data.repository.user.UserRepository
+import com.licoding.instagramapp.data.remote.repository.user.UserRepository
 import com.licoding.instagramapp.domain.requests.UserRequest
 import com.licoding.instagramapp.domain.room.UserDao
 import kotlinx.coroutines.channels.Channel
@@ -31,6 +31,7 @@ class RegisterViewModel(
 
             user = userDao.getCurrentUser()
             GetUserInfo()
+            println(networkStatus)
         }
     }
 
@@ -143,7 +144,10 @@ class RegisterViewModel(
             phoneNumber = phoneNumber,
             email = email,
             accountType = accountType,
-            name = name
+            name = name,
+            followerCount = followerCount,
+            followingCount = followingCount,
+            postCount = postCount
         )
     }
 }

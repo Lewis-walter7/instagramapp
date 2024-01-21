@@ -1,4 +1,4 @@
-package com.licoding.instagramapp.data.repository.user
+package com.licoding.instagramapp.data.remote.repository.user
 
 import com.licoding.instagramapp.data.remote.dto.AuthResponse
 import com.licoding.instagramapp.data.remote.dto.AuthenticationResponse
@@ -14,9 +14,13 @@ interface UserRepository {
     suspend fun authenticate(): AuthenticationResponse
     fun getUsers(): Flow<List<UserResponse>>
     fun getUserPosts(): Flow<List<PostResponse>>
+    suspend fun getSearchedUserPosts(id: String): List<PostResponse>
 
     suspend fun getUserInfo(): UserResponse?
     suspend fun logoutUser()
     suspend fun updateUser(user: EditedUserRequest)
     suspend fun updateUserWithUsername(user: EditedUserRequest): AuthResponse
+
+    suspend fun getUsersByUsername(username: String): List<UserResponse>
+    suspend fun getUserById(id: String):UserResponse
 }

@@ -1,4 +1,4 @@
-package com.licoding.instagramapp.data.repository.user
+package com.licoding.instagramapp.data.remote.repository.user
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
@@ -45,7 +45,10 @@ class UserRepositoryImpl(
                     id = "",
                     phoneNumber = "",
                     accountType = "",
-                    createdAt = 0
+                    createdAt = 0,
+                    followerCount = 0,
+                    followingCount = 0,
+                    postCount = 0
                 )
             }
         }
@@ -56,7 +59,7 @@ class UserRepositoryImpl(
             return withContext(Dispatchers.IO){
                 try {
                     val response = client.post {
-                        url(HttpRoutes.loginRoute)
+                        url(HttpRoutes.LOGINROUTE)
                         contentType(ContentType.Application.Json)
                         setBody(user)
                     }
@@ -132,5 +135,31 @@ class UserRepositoryImpl(
         return response.body<AuthResponse>()
     }
 
+    override suspend fun getUsersByUsername(username: String): List<UserResponse> {
+        return withContext(Dispatchers.IO) {
+            val response = client.get {
+                url(HttpRoutes.GETSEARCHUSERS)
+                parameter("username", username)
+            }
+            response.body()
+        }
+    }
 
+    override suspend fun getUserById(id: String): UserResponse {
+        return withContext(Dispatchers.IO) {
+            val response = client.get {
+                url(HttpRoutes.GETUSERBYID)
+                parameter("userId", id)
+            }
+            response.body()
+        }
+    }
+
+    override suspend fun getSearchedUserPosts(id: String): List<PostResponse> {
+        val response = client.get {
+            url(HttpRoutes.GETSEARCHUSERSPOSTS)
+            parameter("id", id)
+        }
+        return response.body()
+    }
 }

@@ -1,4 +1,4 @@
-package com.licoding.instagramapp.data.repository.post
+package com.licoding.instagramapp.data.remote.repository.post
 
 import com.licoding.instagramapp.data.remote.dto.PostResponse
 import com.licoding.instagramapp.domain.requests.PostRequest

@@ -15,5 +15,8 @@ data class User(
     val profileImage: String?,
     val accountType: String,
     val createdAt: Long?,
-    val name: String? = null
+    val name: String? = null,
+    val followerCount: Long? = 0,
+    val followingCount: Long? = 0,
+    val postCount: Long? =0
 )

@@ -7,7 +7,7 @@ import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.MonitorHeart
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -15,55 +15,38 @@ import com.licoding.instagramapp.data.models.BottomSheetMenuItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheet(
+fun ProfileBottomSheet(
     onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
 
     val items = listOf(
         BottomSheetMenuItem(
-            name = "Settings and privacy",
-            icon = Icons.Default.Settings
+            name = "Report...",
         ),
         BottomSheetMenuItem(
-            name = "Threads",
-            icon = Icons.Default.Settings
+            name = "Block",
         ),
         BottomSheetMenuItem(
-            name = "Your activity",
-            icon = Icons.Outlined.MonitorHeart
+            name = "Block this account",
         ),
         BottomSheetMenuItem(
-            name = "Archive",
-            icon = Icons.Default.Archive
+            name = "Restrict",
         ),
         BottomSheetMenuItem(
-            name = "QR code",
-            icon = Icons.Default.QrCodeScanner
+            name = "Hide your story",
         ),
         BottomSheetMenuItem(
-            name = "Saved",
-            icon = Icons.Default.BookmarkBorder
+            name = "Copy profile URL",
         ),
         BottomSheetMenuItem(
-            name = "Supervision",
-            icon = Icons.Default.People
+            name = "Show QR code",
         ),
         BottomSheetMenuItem(
-            name = "Orders and payments",
-            icon = Icons.Default.CreditCard
+            name = "Send message",
         ),
         BottomSheetMenuItem(
-            name = "Meta Verified",
-            icon = Icons.Outlined.Verified
-        ),
-        BottomSheetMenuItem(
-            name = "Close friends",
-            icon = Icons.Outlined.FormatListBulleted
-        ),
-        BottomSheetMenuItem(
-            name = "Favorites",
-            icon = Icons.Default.StarBorder
+            name = "Share profile",
         )
     )
 
@@ -81,13 +64,6 @@ fun BottomSheet(
                     modifier = Modifier.fillMaxWidth()
                         .padding(bottom = 20.dp)
                 ) {
-                    item.icon?.let {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = null
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = item.name,
                         fontSize = 16.sp

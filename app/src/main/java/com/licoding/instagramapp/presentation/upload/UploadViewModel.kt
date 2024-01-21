@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.licoding.instagramapp.data.models.Image
 import com.licoding.instagramapp.data.models.User
 import com.licoding.instagramapp.data.remote.post.UploadFile
-import com.licoding.instagramapp.data.repository.post.PostRepository
+import com.licoding.instagramapp.data.remote.repository.post.PostRepository
 import com.licoding.instagramapp.domain.requests.PostRequest
 import com.licoding.instagramapp.domain.room.AppDatabaseSingleton
 import kotlinx.coroutines.flow.MutableStateFlow

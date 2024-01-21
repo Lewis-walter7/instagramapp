@@ -12,7 +12,7 @@ object AppDatabaseSingleton {
                 context.applicationContext,
                 InstagramDatabase::class.java,
                 "instagram.db"
-            ).addMigrations(MIGRATION_1_2).build()
+            ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
             INSTANCE = instance
             instance
         }

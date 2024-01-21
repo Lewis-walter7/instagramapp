@@ -22,9 +22,11 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.compose.InstagramappTheme
-import com.licoding.instagramapp.data.repository.user.UserRepositoryImpl
+import com.licoding.instagramapp.data.remote.repository.user.UserRepositoryImpl
 import com.licoding.instagramapp.domain.room.InstagramDatabase
 import com.licoding.instagramapp.domain.room.MIGRATION_1_2
+import com.licoding.instagramapp.domain.room.MIGRATION_2_3
+import com.licoding.instagramapp.domain.room.MIGRATION_3_4
 import com.licoding.instagramapp.domain.services.NetworkObserverImpl
 import com.licoding.instagramapp.presentation.register.components.ForgotDetails
 import com.licoding.instagramapp.presentation.register.components.Login
@@ -39,7 +41,7 @@ class RegisterActivity: ComponentActivity() {
             this,
             InstagramDatabase::class.java,
             "instagram.db"
-        ).addMigrations(MIGRATION_1_2).build()
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
 
         val sharedPreferences = getSharedPreferences("instagramPref", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("jwt-token", null)

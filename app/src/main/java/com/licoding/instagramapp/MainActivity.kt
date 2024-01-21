@@ -28,7 +28,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.InstagramappTheme
 import com.licoding.instagramapp.data.models.BottomNavigatioItem
-import com.licoding.instagramapp.data.repository.user.UserRepositoryImpl
+import com.licoding.instagramapp.data.remote.repository.user.UserRepositoryImpl
 import com.licoding.instagramapp.presentation.main.*
 import com.licoding.instagramapp.presentation.main.components.EditProfile
 import com.licoding.instagramapp.presentation.main.search.Search
@@ -140,7 +140,9 @@ class MainActivity : ComponentActivity() {
                                 }
                                 composable("searchResult") {
                                     SearchResult(
-                                        navController = navController
+                                        navController = navController,
+                                        state = state,
+                                        onEvent = viewModel::onEvent
                                     )
                                 }
                             }
@@ -166,6 +168,14 @@ class MainActivity : ComponentActivity() {
                                         onEvent = viewModel::onEvent
                                     )
                                 }
+                            }
+                            composable("profile/{userId}") {backStackEntry ->
+                                UserProfile(
+                                    navController = navController,
+                                    state = state,
+                                    onEvent = viewModel::onEvent,
+                                    posts = viewModel.posts
+                                )
                             }
                         }
                     }

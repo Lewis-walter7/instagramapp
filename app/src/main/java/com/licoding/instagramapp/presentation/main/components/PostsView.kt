@@ -20,6 +20,7 @@ import com.licoding.instagramapp.data.remote.dto.PostResponse
 @Composable
 fun PostsView(posts: List<PostResponse>) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
     if (posts.isEmpty()) {
         Column {
             Text(
@@ -27,19 +28,9 @@ fun PostsView(posts: List<PostResponse>) {
             )
         }
     } else {
-//        LazyVerticalGrid(
-//            columns = GridCells.FixedSize(screenWidth / 3),
-//            verticalArrangement = Arrangement.spacedBy(4.dp),
-//            horizontalArrangement = Arrangement.spacedBy(4.dp)
-//        ) {
-//            items(posts) { post ->
-//                PostView(post)
-//            }
-//        }
         FlowRow(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp),
+                .fillMaxSize(),
             maxItemsInEachRow = 3,
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(1.dp)

@@ -1,4 +1,4 @@
-package com.licoding.instagramapp.data.repository.post
+package com.licoding.instagramapp.data.remote.repository.post
 
 import com.licoding.instagramapp.data.models.HttpRoutes
 import com.licoding.instagramapp.data.remote.client

@@ -27,7 +27,7 @@ import androidx.room.Room
 import com.example.compose.InstagramappTheme
 import com.licoding.instagramapp.data.models.Image
 import com.licoding.instagramapp.data.remote.FirebaseService
-import com.licoding.instagramapp.data.repository.post.PostRepositoryImpl
+import com.licoding.instagramapp.data.remote.repository.post.PostRepositoryImpl
 import com.licoding.instagramapp.domain.room.InstagramDatabase
 import com.licoding.instagramapp.domain.services.PhotoContProvider
 import com.licoding.instagramapp.presentation.upload.UploadViewModel

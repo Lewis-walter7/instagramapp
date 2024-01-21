@@ -1,4 +1,4 @@
-package com.licoding.instagramapp.data.repository.user
+package com.licoding.instagramapp.data.remote.repository.user
 
 import com.licoding.instagramapp.data.models.User
 import com.licoding.instagramapp.domain.room.UserDao
